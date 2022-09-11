@@ -1,10 +1,11 @@
 package domain;
 
 public class Pelicula {
-    protected String nombre;
-    
-    public Pelicula(){
-        
+
+    private String nombre;
+
+    public Pelicula() {
+
     }
 
     public Pelicula(String nombre) {
@@ -21,7 +22,7 @@ public class Pelicula {
 
     @Override
     public String toString() {
-        return "Pelicula{" + "nombre=" + nombre + '}';
+        return this.nombre;
     }
-    
+
 }

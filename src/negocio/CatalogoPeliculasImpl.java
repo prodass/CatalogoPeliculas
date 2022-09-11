@@ -5,60 +5,67 @@
  */
 package negocio;
 
-import datos.AccesoDatos;
+import datos.AccesoDatosImpl;
+import datos.IAccesoDatos;
+import domain.Pelicula;
+import excepciones.*;
 
-public class CatalogoPeliculasImpl extends AccesoDatos implements ICatalogoPeliculas {
+public class CatalogoPeliculasImpl implements ICatalogoPeliculas {
+
+    private final IAccesoDatos datos;
 
     public CatalogoPeliculasImpl() {
-
+        this.datos = new AccesoDatosImpl();
     }
 
-    public static String iniciarArchivo(String nombreArchivo) {
-        if (!existe(nombreArchivo)) {
-            if (crearArchivo(nombreArchivo)) {
-                return "El archivo fue creado con exito!";
-            } else {
-                return "El archivo no pudo ser creado.";
+    @Override
+    public void agregarPeliculas(String nombrePelicula) {
+        var pelicula = new Pelicula(nombrePelicula);
+        try {
+            datos.cargar(pelicula, NOMBRE_ARCHIVO);
+        } catch (AccesoDatosEx ex) {
+            System.out.println("Error de acceso a datos");
+            ex.printStackTrace(System.out);
+        }
+    }
+
+    @Override
+    public void listarPeliculas() {
+        try {
+            var listadoPeliculas = this.datos.listar(NOMBRE_ARCHIVO);
+            for (var elemento : listadoPeliculas) {
+                System.out.println("\t.- " + elemento);
             }
-        } else {
-            return "El archivo ya existe!";
+        } catch (AccesoDatosEx ex) {
+            System.out.println("Error de acceso a datos.");
+            ex.printStackTrace(System.out);
         }
     }
 
-    public String borrar(String nombreArchivo) {
-        if (borrarArchivo(nombreArchivo)) {
-            return "El archivo se ha borrado con exito!";
-        } else {
-            return "El archivo no se pudo borrar!";
+    @Override
+    public void buscarPelicula(String nombrePelicula) {
+        String resultado = null;
+        try {
+            resultado = this.datos.buscar(NOMBRE_ARCHIVO, nombrePelicula);
+        } catch (AccesoDatosEx ex) {
+            System.out.println("Error acceso a datos.");
+            ex.printStackTrace(System.out);
         }
-    }
-
-    public static String agregarPelicula(String nombrePelicula, String nombreArchivo) {
-        if (!existe(nombreArchivo)) {
-            return "Nombre del archivo ingresado no existe!";
-        } else {
-            if (cargarPelicula(nombrePelicula, nombreArchivo)) {
-                return "La pelicula " + nombrePelicula + " ha sido agregada con exito!";
-            } else {
-                return "No se ha podido agregar la pelicula deseada.";
-            }
-        }
-    }
-
-    public static void listarPeliculas(String nombreArchivo) {
-        var listadoPeliculas = listar(nombreArchivo);
-
-        for (Object elemento : listadoPeliculas) {
-            System.out.println("\t.- " + elemento);
-        }
+        System.out.println("Resultado = " + resultado);
     }
     
-    public static String buscarPelicula(String nombreArchivo, String nombrePelicula) {
-        if(buscar(nombreArchivo, nombrePelicula)){
-            return "La pelicula" + " existe dentro del catalogo!";
-        }
-        else {
-            return "La pelicula" + " no existe dentro del catalogo!";
+    @Override
+    public void iniciarArchivo() {
+        try {
+            if (this.datos.existe(NOMBRE_ARCHIVO)) {
+                System.out.println("El archivo "+ NOMBRE_ARCHIVO +" ya existe!");
+            }
+            else{
+                datos.crear(NOMBRE_ARCHIVO);
+            }
+        } catch (AccesoDatosEx ex) {
+            System.out.println("Error al iniciar el archivo del catalogo.");
+            ex.printStackTrace(System.out); 
         }
     }
 }

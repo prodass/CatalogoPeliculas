@@ -5,6 +5,7 @@ package presentacion;
 
 import java.util.Scanner;
 import negocio.CatalogoPeliculasImpl;
+import negocio.ICatalogoPeliculas;
 
 public class CPJLaboratorioFinal extends CatalogoPeliculasImpl {
 
@@ -16,7 +17,7 @@ public class CPJLaboratorioFinal extends CatalogoPeliculasImpl {
         
         String respuestaSalida = "S";
         int respuestaMenu;
-        var nombreArchivo = "c:\\CatalogoPeliculas\\peliculas.txt";
+        ICatalogoPeliculas catalogo = new CatalogoPeliculasImpl();
         
         Scanner scanner = new Scanner(System.in);
         
@@ -35,25 +36,30 @@ public class CPJLaboratorioFinal extends CatalogoPeliculasImpl {
             switch (respuestaMenu) {
                 case 0 -> {
                     respuestaSalida = "n";
+                    break;
                 }
                 case 1 -> {
-                    Mensaje(iniciarArchivo(nombreArchivo));
+                    catalogo.iniciarArchivo();
+                    break;
                 }
                 case 2 -> {
                     System.out.print("\n- Ingrese el nombre de la pelicula a agregar: ");
                     String nombrePelicula = scanner.nextLine();
 
-                    Mensaje(agregarPelicula(nombrePelicula, nombreArchivo));
+                    catalogo.agregarPeliculas(nombrePelicula);
+                    break;
                 }
                 case 3 -> {
                     System.out.println("\n- Sus peliculas actuales son: ");
-                    listarPeliculas(nombreArchivo);
+                    catalogo.listarPeliculas();
+                    break;
                 }
                 case 4 -> {
                     System.out.print("\n- Ingrese el nombre de la pelicula a buscar: ");
                     String nombrePelicula = scanner.nextLine();
                     
-                    Mensaje(buscarPelicula(nombreArchivo, nombrePelicula));
+                    catalogo.buscarPelicula(nombrePelicula);
+                    break;
                 }
             }
 

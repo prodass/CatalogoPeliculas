@@ -5,8 +5,10 @@
 package negocio;
 
 public interface ICatalogoPeliculas {
-    //public abstract String agregarPelicula(String nombrePelicula, String nombreArchivo);
-    //public abstract void listarPeliculas(String nombreArchivo);
-    //public abstract void buscarPelicula(String nombreArchivo, String buscar);
-    //public abstract String iniciarArchivo(String nombreArchivo);
+    String NOMBRE_ARCHIVO = "c:\\CatalogoPeliculas\\peliculas.txt";
+    
+    void agregarPeliculas(String nombrePelicula);
+    void listarPeliculas();
+    void buscarPelicula(String buscar);
+    void iniciarArchivo();
 }
